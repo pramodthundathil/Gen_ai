@@ -1,0 +1,183 @@
+<!-- analytics_dashboard.html -->
+{% extends 'index.html' %}
+
+{% block content %}
+<div class="analytics-container">
+    <div class="row mb-4">
+        <div class="col-md-8">
+            <h2 class="page-title">Chat Analytics Dashboard</h2>
+        </div>
+        <div class="col-md-4 text-end">
+            <div class="btn-group">
+                <a href="?time_period=day" class="btn {% if time_period == 'day' %}btn-primary{% else %}btn-outline-primary{% endif %}">Day</a>
+                <a href="?time_period=week" class="btn {% if time_period == 'week' %}btn-primary{% else %}btn-outline-primary{% endif %}">Week</a>
+                <a href="?time_period=month" class="btn {% if time_period == 'month' %}btn-primary{% else %}btn-outline-primary{% endif %}">Month</a>
+                <a href="?time_period=year" class="btn {% if time_period == 'year' %}btn-primary{% else %}btn-outline-primary{% endif %}">Year</a>
+                <a href="?time_period=all" class="btn {% if time_period == 'all' %}btn-primary{% else %}btn-outline-primary{% endif %}">All Time</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mb-4">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5 class="card-title">Usage Statistics</h5>
+                    <a href="{% url 'download_analytics_pdf' %}" class="btn btn-sm btn-primary">Download PDF Report</a>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-striped table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Company</th>
+                                    <th>Sessions</th>
+                                    <th>Total Messages</th>
+                                    <th>User Messages</th>
+                                    <th>Bot Messages</th>
+                                    <th>Avg Msgs/Session</th>
+                                    <th>Last Activity</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for stat in user_stats %}
+                                <tr>
+                                    <td>{{ stat.company_name }}</td>
+                                    <td>{{ stat.total_sessions }}</td>
+                                    <td>{{ stat.total_messages }}</td>
+                                    <td>{{ stat.user_messages }}</td>
+                                    <td>{{ stat.bot_messages }}</td>
+                                    <td>{{ stat.avg_messages_per_session }}</td>
+                                    <td>{{ stat.last_activity|date:"Y-m-d H:i" }}</td>
+                                    <td>
+                                        <a href="{% url 'user_detailed_analytics' stat.user_id %}" class="btn btn-sm btn-outline-primary">Details</a>
+                                        <a href="{% url 'download_analytics_pdf' %}?user_id={{ stat.user_id }}" class="btn btn-sm btn-outline-secondary">PDF</a>
+                                    </td>
+                                </tr>
+                                {% empty %}
+                                <tr>
+                                    <td colspan="8" class="text-center">No data available</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title">Messages Distribution</h5>
+                </div>
+                <div class="card-body">
+                    <canvas id="messagesDistributionChart"></canvas>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title">Sessions by Company</h5>
+                </div>
+                <div class="card-body">
+                    <canvas id="sessionsByCompanyChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% block extra_scripts %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Get data from the table for charts
+        const companies = [];
+        const totalMessages = [];
+        const userMessages = [];
+        const botMessages = [];
+        const sessions = [];
+
+        const rows = document.querySelectorAll('table tbody tr');
+        rows.forEach(row => {
+            const cells = row.querySelectorAll('td');
+            if (cells.length > 0) {
+                companies.push(cells[0].textContent);
+                sessions.push(parseInt(cells[1].textContent) || 0);
+                totalMessages.push(parseInt(cells[2].textContent) || 0);
+                userMessages.push(parseInt(cells[3].textContent) || 0);
+                botMessages.push(parseInt(cells[4].textContent) || 0);
+            }
+        });
+
+        // Messages Distribution Chart
+        const messagesCtx = document.getElementById('messagesDistributionChart').getContext('2d');
+        new Chart(messagesCtx, {
+            type: 'bar',
+            data: {
+                labels: companies,
+                datasets: [
+                    {
+                        label: 'User Messages',
+                        data: userMessages,
+                        backgroundColor: '#4f70ff', // primary-light
+                    },
+                    {
+                        label: 'Bot Messages',
+                        data: botMessages,
+                        backgroundColor: '#00b4d8', // accent
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    x: {
+                        stacked: true,
+                    },
+                    y: {
+                        stacked: true,
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+
+        // Sessions by Company Chart
+        const sessionsCtx = document.getElementById('sessionsByCompanyChart').getContext('2d');
+        new Chart(sessionsCtx, {
+            type: 'pie',
+            data: {
+                labels: companies,
+                datasets: [{
+                    data: sessions,
+                    backgroundColor: [
+                        '#38e0ff', // primary
+                        '#3a56d4', // primary-dark
+                        '#4f70ff', // primary-light
+                        '#00b4d8', // accent
+                        '#0096c7', // accent-dark
+                        '#ef476f', // danger
+                        '#06d6a0', // success
+                        '#ffd166', // warning
+                    ],
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'right',
+                    }
+                }
+            }
+        });
+    });
+</script>
+{% endblock %}
+{% endblock %}

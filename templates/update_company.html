@@ -1,0 +1,795 @@
+{% extends "index.html" %}
+
+{% block content %}
+<div class="container-fluid py-4">
+    <!-- Page Header -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="header-card d-flex justify-content-between align-items-center px-4 py-3">
+                <h3 class="m-0"><i class="bi bi-building"></i> Update Company Details</h3>
+                <a href="{% url 'index' %}" class="btn btn-glass">
+                    <i class="bi bi-arrow-left"></i> Back to Dashboard
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="row">
+        <!-- Company Details Form -->
+        <div class="col-lg-8">
+            <div class="dashboard-card mb-4">
+                <div class="card-header">
+                    <h5 class="m-0"><i class="bi bi-pencil-square"></i> Company Information</h5>
+                </div>
+                <div class="card-body">
+                    <form method="POST" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        
+                        <div class="row mb-4">
+                            <div class="col-md-12">
+                                <h5 class="section-divider">
+                                    <i class="bi bi-info-circle"></i> Basic Information
+                                </h5>
+                            </div>
+                        </div>
+                        
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <div class="form-floating mb-3">
+                                    <input type="text" class="form-control" id="company_name" name="company_name" 
+                                           value="{{ user.company_name }}" required>
+                                    <label for="company_name">Company Name *</label>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-floating mb-3">
+                                    <input type="email" class="form-control" id="email" name="email" 
+                                           value="{{ user.email }}" required>
+                                    <label for="email">Email Address *</label>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <div class="form-floating mb-3">
+                                    <input type="tel" class="form-control" id="phone" name="phone" 
+                                           value="{{ user.phone }}" required>
+                                    <label for="phone">Phone Number *</label>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-floating mb-3">
+                                    <input type="url" class="form-control" id="website" name="website" 
+                                           value="{{ user.website }}">
+                                    <label for="website">Website</label>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="row mb-3">
+                            <div class="col-md-12">
+                                <div class="form-floating mb-3">
+                                    <textarea class="form-control" id="address" name="address" 
+                                              style="height: 100px">{{ user.address }}</textarea>
+                                    <label for="address">Address</label>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="row mb-4">
+                            <div class="col-md-6">
+                                <div class="form-floating mb-3">
+                                    <select class="form-select" id="role" name="role">
+                                        <option value="user" {% if user.role == 'user' %}selected{% endif %}>User</option>
+                                        <option value="manager" {% if user.role == 'manager' %}selected{% endif %}>Manager</option>
+                                        <option value="admin" {% if user.role == 'admin' %}selected{% endif %}>Admin</option>
+                                    </select>
+                                    <label for="role">Role</label>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-floating mb-3">
+                                    <select class="form-select" id="is_active" name="is_active">
+                                        <option value="True" {% if user.is_active %}selected{% endif %}>Active</option>
+                                        <option value="False" {% if not user.is_active %}selected{% endif %}>Inactive</option>
+                                    </select>
+                                    <label for="is_active">Status</label>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="row mb-4">
+                            <div class="col-md-12">
+                                <h5 class="section-divider">
+                                    <i class="bi bi-image"></i> Company Logo
+                                </h5>
+                            </div>
+                        </div>
+                        
+                        <div class="row mb-4">
+                            <div class="col-md-6">
+                                <div class="logo-upload-container">
+                                    <label for="company_logo" class="upload-label">
+                                        <div class="upload-icon">
+                                            <i class="bi bi-cloud-arrow-up"></i>
+                                            <span>Upload Logo</span>
+                                        </div>
+                                    </label>
+                                    <input type="file" class="form-control" id="company_logo" name="company_logo">
+                                    <small class="text-muted">Recommended size: 200x200px</small>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                {% if user.company_logo %}
+                                <div class="logo-preview text-center">
+                                    <img src="{{ user.company_logo.url }}" alt="Company Logo" class="img-thumbnail logo-img">
+                                    <div class="mt-2">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="remove_logo" name="remove_logo">
+                                            <label class="form-check-label" for="remove_logo">
+                                                Remove current logo
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                                {% else %}
+                                <div class="text-center pt-3 no-logo">
+                                    <i class="bi bi-building"></i>
+                                    <p class="text-muted">No logo uploaded</p>
+                                </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-12">
+                                <button type="submit" class="btn btn-primary px-4">
+                                    <i class="bi bi-save"></i> Save Changes
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Sidebar Section -->
+        <div class="col-lg-4">
+            <!-- API Key Management -->
+            <div class="dashboard-card mb-4">
+                <div class="card-header accent">
+                    <h5 class="m-0"><i class="bi bi-key"></i> API Key Management</h5>
+                </div>
+                <div class="card-body">
+                    <div class="mb-4">
+                        <label class="form-label fw-bold">Current API Key</label>
+                        <div class="input-group api-key-group">
+                            <input type="text" class="form-control" value="{{ user.api_key|default:'No API key generated' }}" 
+                                   id="apiKeyField" readonly>
+                            <button class="btn btn-copy" type="button" onclick="copyApiKey()">
+                                <i class="bi bi-clipboard"></i>
+                            </button>
+                        </div>
+                        {% if user.api_key_added %}
+                        <div class="api-key-date">
+                            <i class="bi bi-calendar-event"></i>
+                            Generated on: {{ user.api_key_added|date:"F d, Y" }}
+                        </div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="mb-4">
+                        <label class="form-label fw-bold">API Key Expiry</label>
+                        <div class="expiry-display">
+                            <i class="bi bi-clock-history"></i>
+                            <span>{{ user.api_expiry|date:'F d, Y H:i'|default:'Not set' }}</span>
+                        </div>
+                    </div>
+                    
+                    <div class="d-grid">
+                        <button class="btn btn-accent" type="button" data-bs-toggle="modal" data-bs-target="#generateApiModal">
+                            {% if user.api_key %}
+                            <i class="bi bi-arrow-repeat"></i> Regenerate API Key
+                            {% else %}
+                            <i class="bi bi-key"></i> Generate API Key
+                            {% endif %}
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Reports Section -->
+            <div class="dashboard-card">
+                <div class="card-header secondary">
+                    <h5 class="m-0"><i class="bi bi-bar-chart"></i> Reports</h5>
+                </div>
+                <div class="card-body">
+                    <div class="d-grid gap-3">
+                        <a class="btn btn-glass-dark" type="button" href="{%url 'generate_full_chat_report' user.id %}">
+                            <i class="bi bi-chat-left-text"></i> Generate Chat Report
+                        </a>
+                        <a href="{%url 'user_detailed_analytics' user.id %}" class="btn btn-glass-dark" type="button">
+                            <i class="bi bi-graph-up"></i> Usage Statistics
+                        </a>
+                        <button class="btn btn-glass-dark" type="button">
+                            <i class="bi bi-file-earmark-text"></i> Activity Log
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-8">
+            <!-- Document Management -->
+            <div class="dashboard-card mb-4">
+                <div class="card-header">
+                    <h5 class="m-0"><i class="bi bi-file-earmark"></i> Company Documents</h5>
+                </div>
+                <div class="card-body">
+                    <form method="post" action="{%url 'update_user_profile' user.id %}" enctype="multipart/form-data" id="profileForm">
+                        {% csrf_token %}
+                    
+                        <!-- Company Profile Upload -->
+                        <div class="doc-upload-container mb-4">
+                            <div class="doc-header">
+                                <i class="bi bi-building"></i> Company Profile
+                            </div>
+                            <div class="doc-content">
+                                <div class="input-group">
+                                    <input type="file" class="form-control" name="company_profile" id="companyProfile" accept="application/pdf">
+                                    <button class="btn btn-upload" type="submit">
+                                        <i class="bi bi-upload"></i> Upload
+                                    </button>
+                                </div>
+                                {% if user.company_profile.company_profile %}
+                                <div class="mt-2">
+                                    <a href="{{ user.company_profile.company_profile.url }}" class="btn btn-view" target="_blank">
+                                        <i class="bi bi-file-earmark-pdf"></i> View Current Profile
+                                    </a>
+                                </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    
+                        <!-- Products & Services Upload -->
+                        <div class="doc-upload-container mb-4">
+                            <div class="doc-header">
+                                <i class="bi bi-box"></i> Products & Services
+                            </div>
+                            <div class="doc-content">
+                                <div class="input-group">
+                                    <input type="file" class="form-control" name="products_and_services" id="productsAndServices" accept="application/pdf">
+                                    <button class="btn btn-upload" type="submit">
+                                        <i class="bi bi-upload"></i> Upload
+                                    </button>
+                                </div>
+                                {% if user.company_profile.products_and_services %}
+                                <div class="mt-2">
+                                    <a href="{{ user.company_profile.products_and_services.url }}" class="btn btn-view" target="_blank">
+                                        <i class="bi bi-file-earmark-pdf"></i> View Products & Services
+                                    </a>
+                                </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    
+                        <!-- Company Policies Upload -->
+                        <div class="doc-upload-container mb-4">
+                            <div class="doc-header">
+                                <i class="bi bi-shield-check"></i> Company Policies
+                            </div>
+                            <div class="doc-content">
+                                <div class="input-group">
+                                    <input type="file" class="form-control" name="policies" id="companyPolicies" accept="application/pdf">
+                                    <button class="btn btn-upload" type="submit">
+                                        <i class="bi bi-upload"></i> Upload
+                                    </button>
+                                </div>
+                                {% if user.company_profile.policies %}
+                                <div class="mt-2">
+                                    <a href="{{ user.company_profile.policies.url }}" class="btn btn-view" target="_blank">
+                                        <i class="bi bi-file-earmark-pdf"></i> View Policies
+                                    </a>
+                                </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    
+                        <!-- Chatbot Color -->
+                        <div class="row mb-4">
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold">Chatbot Color</label>
+                                <div class="color-picker-container">
+                                    <input type="color" class="form-control form-control-color" name="chatbot_color" id="chatbotColor"
+                                        value="{{ user.company_profile.chatbot_color }}">
+                                    <label for="chatbotColor" class="color-label">Choose brand color</label>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold">BOT NAME</label>
+                                <input type="text" class="form-control" name="bot_name" value="{{user.company_profile.bot_name}}">
+                            </div>
+                            <div class="col-md-12">
+                                <label class="form-label fw-bold">API</label>
+                                <input type="text" class="form-control" name="g_api" value="{{user.company_profile.g_api}}">
+                            </div>
+                        </div>
+                    
+                        <!-- Submit Button -->
+                        <button type="submit" class="btn btn-primary px-4">
+                            <i class="bi bi-check-circle"></i> Save All Documents
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Generate API Key Modal -->
+<div class="modal fade" id="generateApiModal" tabindex="-1" aria-labelledby="generateApiModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="generateApiModalLabel">
+                    {% if user.api_key %}Regenerate{% else %}Generate{% endif %} API Key
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="apiKeyForm" method="POST" action="{%url 'generate_api_key' user.id %}">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label for="expiryMonths" class="form-label fw-bold">API Key Validity Period</label>
+                        <select class="form-select" id="expiryMonths" name="expiry_months">
+                            <option value="3">3 months</option>
+                            <option value="6">6 months</option>
+                            <option value="12" selected>12 months</option>
+                            <option value="24">24 months</option>
+                        </select>
+                    </div>
+                    
+                    {% if user.api_key %}
+                    <div class="text-warning alert-warning">
+                        <i class="bi bi-exclamation-triangle-fill"></i> Warning: Regenerating the API key will immediately invalidate the current key. Any services using this key will stop working until updated.
+                    </div>
+                    {% endif %}
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-light" data-bs-dismiss="modal">
+                    <i class="bi bi-x"></i> Cancel
+                </button>
+                <button type="submit" form="apiKeyForm" class="btn btn-primary">
+                    <i class="bi bi-key"></i> {% if user.api_key %}Regenerate{% else %}Generate{% endif %} Key
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Custom Styling -->
+<style>
+    :root {
+        --primary: #38e0ff ;
+    --secondary: #191C24;
+    --light: #6C7293;
+    --dark: #000000;
+        /* --primary: #4361ee; */
+        --primary-dark: #3a56d4;
+        --primary-light: #4f70ff;
+        /* --secondary: #2b3452; */
+        --accent: #00b4d8;
+        --accent-dark: #0096c7;
+        /* --light: #f8f9fa; */
+        /* --dark: #212529; */
+        --danger: #ef476f;
+        --success: #06d6a0;
+        --warning: #ffd166;
+        --card-bg: #ffffff;
+        --hover-bg: #f0f4ff;
+    }
+
+    body {
+        background-color: #f0f2f5;
+        font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    }
+    
+    .header-card {
+        background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+        border-radius: 12px;
+        color: white;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+    
+    .dashboard-card {
+        background-color: var(--card-bg);
+        border-radius: 12px;
+        box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+        overflow: hidden;
+    }
+    
+    .dashboard-card .card-header {
+        background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+        color: white;
+        padding: 16px 20px;
+        border: none;
+    }
+    
+    .dashboard-card .card-header.accent {
+        background: linear-gradient(135deg, var(--accent) 0%, var(--accent-dark) 100%);
+    }
+    
+    .dashboard-card .card-header.secondary {
+        background: linear-gradient(135deg, var(--secondary) 0%, #1d2b4c 100%);
+    }
+    
+    .dashboard-card .card-body {
+        padding: 24px;
+    }
+    
+    .section-divider {
+        color: var(--primary);
+        font-weight: 600;
+        border-bottom: 2px solid;
+        padding-bottom: 8px;
+        margin-bottom: 20px;
+        display: flex;
+        align-items: center;
+    }
+    
+    .section-divider i {
+        margin-right: 10px;
+    }
+    
+    .form-control, .form-select {
+        border: 1px solid #dee2e6;
+        padding: 0.75rem 1rem;
+        border-radius: 8px;
+        background-color: #f8f9fa;
+        transition: all 0.3s ease;
+    }
+    
+    .form-control:focus, .form-select:focus {
+        box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.15);
+        border-color: var(--primary);
+        background-color: white;
+    }
+    
+    .form-floating > .form-control,
+    .form-floating > .form-select {
+        height: calc(3.5rem + 2px);
+        line-height: 1.25;
+    }
+    
+    .form-check-input:checked {
+        background-color: var(--primary);
+        border-color: var(--primary);
+    }
+    
+    .btn-primary {
+        background-color: var(--primary);
+        border-color: var(--primary);
+        border-radius: 8px;
+        font-weight: 500;
+        padding: 0.6rem 1.5rem;
+        box-shadow: 0 4px 6px rgba(67, 97, 238, 0.2);
+        transition: all 0.3s ease;
+    }
+    
+    .btn-primary:hover {
+        background-color: var(--primary-dark);
+        border-color: var(--primary-dark);
+        transform: translateY(-2px);
+        box-shadow: 0 6px 8px rgba(67, 97, 238, 0.25);
+    }
+    
+    .btn-accent {
+        background-color: var(--accent);
+        border-color: var(--accent);
+        color: white;
+        border-radius: 8px;
+        font-weight: 500;
+        padding: 0.6rem 1.5rem;
+        box-shadow: 0 4px 6px rgba(0, 180, 216, 0.2);
+        transition: all 0.3s ease;
+    }
+    
+    .btn-accent:hover {
+        background-color: var(--accent-dark);
+        border-color: var(--accent-dark);
+        color: white;
+        transform: translateY(-2px);
+    }
+    
+    .btn-glass {
+        background-color: rgba(255, 255, 255, 0.15);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        color: white;
+        border-radius: 8px;
+        transition: all 0.3s ease;
+    }
+    
+    .btn-glass:hover {
+        background-color: rgba(255, 255, 255, 0.25);
+        color: white;
+    }
+    
+    .btn-glass-dark {
+        background-color: rgba(43, 52, 82, 0.07);
+        border: 1px solid rgba(43, 52, 82, 0.1);
+        color: var(--secondary);
+        border-radius: 8px;
+        transition: all 0.3s ease;
+        font-weight: 500;
+    }
+    
+    .btn-glass-dark:hover {
+        background-color: rgba(43, 52, 82, 0.12);
+        color: var(--secondary);
+    }
+    
+    .btn-copy {
+        background-color: var(--primary-light);
+        color: white;
+        border: none;
+    }
+    
+    .btn-copy:hover {
+        background-color: var(--primary);
+        color: white;
+    }
+    
+    .btn-upload {
+        background-color: var(--accent);
+        color: white;
+        border: none;
+    }
+    
+    .btn-upload:hover {
+        background-color: var(--accent-dark);
+        color: white;
+    }
+    
+    .btn-view {
+        background-color: var(--secondary);
+        color: white;
+        border: none;
+        border-radius: 6px;
+        font-size: 0.875rem;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+    }
+    
+    .btn-view:hover {
+        background-color: #343f5e;
+        color: white;
+    }
+    
+    .logo-upload-container {
+        background-color: #f8f9fa;
+        border: 2px dashed #dee2e6;
+        border-radius: 10px;
+        padding: 20px;
+        text-align: center;
+        transition: all 0.3s ease;
+    }
+    
+    .logo-upload-container:hover {
+        border-color: var(--primary);
+    }
+    
+    .upload-icon {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        color: #6c757d;
+    }
+    
+    .upload-icon i {
+        font-size: 2rem;
+    }
+    
+    .upload-label {
+        cursor: pointer;
+        width: 100%;
+        margin-bottom: 0;
+    }
+    
+    .logo-preview {
+        padding: 15px;
+        background-color: white;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
+    }
+    
+    .logo-img {
+        max-height: 100px;
+        border-radius: 8px;
+        background-color: #f8f9fa;
+    }
+    
+    .no-logo {
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        color: #adb5bd;
+    }
+    
+    .no-logo i {
+        font-size: 2.5rem;
+        margin-bottom: 10px;
+    }
+    
+    .api-key-group {
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
+        border-radius: 8px;
+        overflow: hidden;
+    }
+    
+    .api-key-date {
+        display: flex;
+        align-items: center;
+        margin-top: 8px;
+        color: #6c757d;
+        font-size: 0.875rem;
+    }
+    
+    .api-key-date i {
+        margin-right: 6px;
+    }
+    
+    .expiry-display {
+        background-color: #f8f9fa;
+        padding: 12px 16px;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+    
+    .doc-upload-container {
+        border: 1px solid #e9ecef;
+        border-radius: 10px;
+        overflow: hidden;
+    }
+    
+    .doc-header {
+        background-color: #f8f9fa;
+        padding: 12px 16px;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        color: var(--secondary);
+        border-bottom: 1px solid #e9ecef;
+    }
+    
+    .doc-content {
+        padding: 16px;
+    }
+    
+    .color-picker-container {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+    
+    .form-control-color {
+        width: 50px;
+        height: 50px;
+        padding: 0;
+        border-radius: 8px;
+        cursor: pointer;
+    }
+    
+    .color-label {
+        font-size: 0.875rem;
+        color: #6c757d;
+    }
+
+    /* Modal styling */
+    .modal-content {
+        border-radius: 12px;
+        border: none;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    }
+    
+    .modal-header {
+        background-color: var(--primary);
+        color: white;
+        border-bottom: none;
+        border-radius: 12px 12px 0 0;
+    }
+    
+    .modal-footer {
+        border-top: 1px solid #e9ecef;
+    }
+    
+    .alert-warning {
+        background-color: rgba(255, 209, 102, 0.15);
+        color: #856404;
+        border-color: rgba(255, 209, 102, 0.3);
+        border-radius: 8px;
+        display: flex;
+        align-items: flex-start;
+        gap: 10px;
+    }
+    
+    .alert-warning i {
+        font-size: 1.25rem;
+        color: var(--warning);
+    }
+    
+    /* Hidden file input styling */
+    input[type="file"] {
+        opacity: 1;
+    }
+</style>
+
+<!-- JavaScript for copy API Key functionality -->
+<script>
+    function copyApiKey() {
+        var apiKeyField = document.getElementById("apiKeyField");
+        apiKeyField.select();
+        apiKeyField.setSelectionRange(0, 99999); /* For mobile devices */
+        document.execCommand("copy");
+        
+        // Create a tooltip
+        const tooltip = document.createElement('div');
+        tooltip.textContent = "Copied!";
+        tooltip.className = "copy-tooltip";
+        document.body.appendChild(tooltip);
+        
+        // Position tooltip
+        const btn = document.querySelector('.btn-copy');
+        const rect = btn.getBoundingClientRect();
+        tooltip.style.position = 'absolute';
+        tooltip.style.top = `${rect.top - 30}px`;
+        tooltip.style.left = `${rect.left + rect.width/2 - tooltip.offsetWidth/2}px`;
+        tooltip.style.backgroundColor = 'rgba(0,0,0,0.8)';
+        tooltip.style.color = 'white';
+        tooltip.style.padding = '5px 10px';
+        tooltip.style.borderRadius = '4px';
+        tooltip.style.zIndex = '9999';
+        tooltip.style.transition = 'opacity 0.5s';
+        
+        // Fade out and remove tooltip
+        setTimeout(() => {
+            tooltip.style.opacity = '0';
+            setTimeout(() => document.body.removeChild(tooltip), 500);
+        }, 1500);
+    }
+</script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        function validatePDF(input) {
+            const file = input.files[0];
+            if (file && file.type !== "application/pdf") {
+                alert("Only PDF files are allowed.");
+                input.value = ""; // Clear the input
+            }
+        }
+    
+        document.getElementById("companyProfile").addEventListener("change", function () {
+            validatePDF(this);
+        });
+        document.getElementById("productsAndServices").addEventListener("change", function () {
+            validatePDF(this);
+        });
+        document.getElementById("companyPolicies").addEventListener("change", function () {
+            validatePDF(this);
+        });
+    });
+</script>
+
+{% endblock %}

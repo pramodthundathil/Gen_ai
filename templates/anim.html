@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+ <link rel="stylesheet" href="{%static 'css\anim_styles.css' %}">   
+</head>
+<body>
+    <div class="container">
+        <!-- App Interface -->
+        <div class="app-frame">
+            <div class="header">AI Chatbot Builder</div>
+            <div class="left-panel">
+                <div class="left-title">Your Websites</div>
+                <div class="website" id="site1">E-commerce Site<div class="checkmark">✓</div>
+                </div>
+                <div class="website" id="site2">Support Portal</div>
+                <div class="website" id="site3">Blog</div>
+                <div class="add-button">Add Website</div>
+            </div>
+            <div class="main-panel">
+                <div class="main-title">E-commerce Site Chatbot</div>
+                <div class="chat-preview" id="chatPreview">
+                    <div class="bot-icon" id="botIcon">
+                        <div class="bot-icon-outer">
+                            <div class="bot-icon-inner"></div>
+                        </div>
+                    </div>
+                    <div class="message bot" id="msg1" style="top: 20px;">How can I help you today?</div>
+                    <div class="message user" id="msg2" style="top: 70px;">Do you have this in blue?</div>
+                    <div class="message bot" id="msg3" style="top: 120px;">Yes! We have 3 blue variants in stock.</div>
+                </div>
+                <div class="settings-section" id="settingsSection">
+                    <div class="settings-title">Chatbot Settings</div>
+                    <div class="setting-option" id="setting1">
+                        Training Data: Product Catalog
+                        <div class="toggle" id="toggle1"></div>
+                    </div>
+                    <div class="setting-option" id="setting2">
+                        Personality: Helpful & Friendly
+                        <div class="toggle" id="toggle2"></div>
+                    </div>
+                </div>
+                <div class="deploy-button" id="deployBtn">Deploy Chatbot</div>
+            </div>
+        </div>
+
+        <!-- Connection Lines -->
+        <svg class="connection-line" id="line1" width="800" height="600">
+            <line x1="290" y1="210" x2="330" y2="210" stroke-dasharray="5,5" />
+        </svg>
+
+        <svg class="connection-line" id="line2" width="800" height="600">
+            <line x1="570" y1="520" x2="570" y2="350" stroke-dasharray="5,5" />
+        </svg>
+
+        <!-- Connection Dots -->
+        <div class="connection-dot" id="dot1" style="left: 310px; top: 210px;"></div>
+        <div class="connection-dot" id="dot2" style="left: 570px; top: 500px;"></div>
+        <div class="connection-dot" id="dot3" style="left: 570px; top: 350px;"></div>
+
+        <!-- AI Icon -->
+        <div class="ai-icon" id="aiIcon" style="left: 500px; top: 370px;">AI</div>
+
+        <!-- Step Indicators -->
+        <div class="step-indicator">
+            <div class="step-dot" id="step1"></div>
+            <div class="step-dot" id="step2"></div>
+            <div class="step-dot" id="step3"></div>
+            <div class="step-dot" id="step4"></div>
+            <div class="step-dot" id="step5"></div>
+        </div>
+
+        <div class="step-description" id="stepDesc1">1. Select a website to configure your AI chatbot</div>
+        <div class="step-description" id="stepDesc2">2. Preview sample chatbot interactions</div>
+        <div class="step-description" id="stepDesc3">3. Configure AI settings and training data</div>
+        <div class="step-description" id="stepDesc4">4. Activate AI integration</div>
+        <div class="step-description" id="stepDesc5">5. Deploy your customized chatbot</div>
+
+        <!-- Notification -->
+        <div class="notification" id="notification">Website selected: E-commerce Site</div>
+
+        <!-- Deployment Overlay -->
+        <div class="deployment-overlay" id="deploymentOverlay">
+            <div class="deployment-content">
+                <h2>Deploying AI Chatbot</h2>
+                <p>Setting up your E-commerce Site chatbot with selected configuration</p>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressFill"></div>
+                </div>
+                <p id="deployStatus">Initializing...</p>
+            </div>
+        </div>
+
+        <!-- Chatbot Preview -->
+        <div class="chatbot-preview" id="chatbotPreview">
+            <div class="chatbot-header">
+                <div class="bot-icon-mini">Chat Support</div>
+            </div>
+            <div class="chatbot-body">
+                <div class="chatbot-message bot">Hello! How can I help you?</div>
+                <div class="chatbot-message user">I'm looking for product info</div>
+                <div class="chatbot-message bot">I can help with that! What product are you interested in?</div>
+            </div>
+        </div>
+    </div>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+    let currentStep = 0;
+    const steps = [
+        {
+            execute: () => {
+                document.getElementById('stepDesc1').classList.add('visible');
+                document.getElementById('step1').classList.add('active');
+
+                setTimeout(() => {
+                    document.getElementById('notification').classList.add('visible');
+                    document.getElementById('site1').classList.add('glowing');
+                }, 500);
+
+                setTimeout(() => {
+                    document.getElementById('notification').classList.remove('visible');
+                }, 3000);
+            },
+            duration: 3500
+        },
+        {
+            execute: () => {
+                document.getElementById('stepDesc1').classList.remove('visible');
+                document.getElementById('stepDesc2').classList.add('visible');
+                document.getElementById('step1').classList.remove('active');
+                document.getElementById('step2').classList.add('active');
+
+                document.getElementById('chatPreview').classList.add('visible');
+
+                setTimeout(() => document.getElementById('msg1').classList.add('visible'), 500);
+                setTimeout(() => document.getElementById('msg2').classList.add('visible'), 1500);
+                setTimeout(() => document.getElementById('msg3').classList.add('visible'), 2500);
+            },
+            duration: 4000
+        },
+        {
+            execute: () => {
+                document.getElementById('stepDesc2').classList.remove('visible');
+                document.getElementById('stepDesc3').classList.add('visible');
+                document.getElementById('step2').classList.remove('active');
+                document.getElementById('step3').classList.add('active');
+
+                document.getElementById('settingsSection').classList.add('visible');
+
+                setTimeout(() => document.getElementById('toggle1').classList.add('glowing'), 1000);
+                setTimeout(() => document.getElementById('toggle2').classList.add('glowing'), 2000);
+                setTimeout(() => document.getElementById('deployBtn').classList.add('visible'), 3000);
+            },
+            duration: 4000
+        },
+        {
+            execute: () => {
+                document.getElementById('stepDesc3').classList.remove('visible');
+                document.getElementById('stepDesc4').classList.add('visible');
+                document.getElementById('step3').classList.remove('active');
+                document.getElementById('step4').classList.add('active');
+
+                document.getElementById('aiIcon').classList.add('active');
+
+                setTimeout(() => document.getElementById('line1').classList.add('active'), 1000);
+                setTimeout(() => document.getElementById('dot1').classList.add('active'), 1500);
+                setTimeout(() => document.getElementById('deployBtn').classList.add('active'), 3000);
+            },
+            duration: 4000
+        },
+        {
+            execute: () => {
+                document.getElementById('stepDesc4').classList.remove('visible');
+                document.getElementById('stepDesc5').classList.add('visible');
+                document.getElementById('step4').classList.remove('active');
+                document.getElementById('step5').classList.add('active');
+
+                document.getElementById('deploymentOverlay').classList.add('visible');
+
+                let progress = 0;
+                let interval = setInterval(() => {
+                    progress += 10;
+                    document.getElementById('progressFill').style.width = `${progress}%`;
+                    document.getElementById('deployStatus').textContent = `Deploying... ${progress}%`;
+                    if (progress >= 100) {
+                        clearInterval(interval);
+                        document.getElementById('deployStatus').textContent = "Deployment Complete!";
+                    }
+                }, 500);
+            },
+            duration: 5000
+        }
+    ];
+
+    function nextStep() {
+        if (currentStep < steps.length) {
+            steps[currentStep].execute();
+            setTimeout(() => {
+                currentStep++;
+                nextStep();
+            }, steps[currentStep].duration);
+        }
+    }
+
+    // Start animation sequence
+    nextStep();
+});
+
+    </script>
+<!-- 
+    <script>
+        // Variables to control animation flow
+        let animationRunning = true;
+        let currentStep = 0;
+        const steps = [
+            {
+                execute: () => {
+                    // Step 1: Website Selection
+                    document.getElementById('stepDesc1').classList.add('active');
+                    document.getElementById('step1').classList.add('active');
+
+                    setTimeout(() => {
+                        document.getElementById('notification').classList.add('active');
+                        document.getElementById('site1').classList.add('active');
+                    }, 500);
+
+                    setTimeout(() => {
+                        document.getElementById('notification').classList.remove('active');
+                    }, 3000);
+                },
+                duration: 3500
+            },
+            {
+                execute: () => {
+                    // Step 2: Chat Preview
+                    document.getElementById('stepDesc1').classList.remove('active');
+                    document.getElementById('stepDesc2').classList.add('active');
+                    document.getElementById('step1').classList.remove('active');
+                    document.getElementById('step2').classList.add('active');
+
+                    document.getElementById('chatPreview').classList.add('active');
+
+                    setTimeout(() => {
+                        document.getElementById('msg1').classList.add('visible');
+                    }, 500);
+
+                    setTimeout(() => {
+                        document.getElementById('msg2').classList.add('visible');
+                    }, 1500);
+
+                    setTimeout(() => {
+                        document.getElementById('msg3').classList.add('visible');
+                        document.getElementById('botIcon').classList.add('active');
+                    }, 2500);
+                },
+                duration: 4000
+            },
+            {
+                execute: () => {
+                    // Step 3: Configure Settings
+                    document.getElementById('stepDesc2').classList.remove('active');
+                    document.getElementById('stepDesc3').classList.add('active');
+                    document.getElementById('step2').classList.remove('active');
+                    document.getElementById('step3').classList.add('active');
+
+                    document.getElementById('settingsSection').classList.add('visible');
+
+                    setTimeout(() => {
+                        document.getElementById('toggle1').classList.add('active');
+                    }, 1000);
+
+                    setTimeout(() => {
+                        document.getElementById('toggle2').classList.add('active');
+                    }, 2000);
+
+                    setTimeout(() => {
+                        document.getElementById('deployBtn').classList.add('visible');
+                    }, 3000);
+                },
+                duration: 4000
+            },
+            {
+                execute: () => {
+                    // Step 4: AI Integration
+                    document.getElementById('stepDesc3').classList.remove('active');
+                    document.getElementById('stepDesc4').classList.add('active');
+                    document.getElementById('step3').classList.remove('active');
+                    document.getElementById('step4').classList.add('active');
+
+                    document.getElementById('aiIcon').classList.add('active');
+
+                    setTimeout(() => {
+                        document.getElementById('line1').classList.add('active');
+                        document.getElementById('dot1').classList.add('active');
+                    }, 1000);
+
+                    setTimeout(() => {
+                        createDataFlow(290, 210, 330, 210);
+                    }, 1500);
+
+                    setTimeout(() => {
+                        document.getElementById('deployBtn').classList.add('active');
+                    }, 3000);
+                },
+                duration: 4000
+            },
+            {
+                execute: () => {
+                    // Step 5: Deployment
+                    document.getElementById('stepDesc4').classList.remove('active');
+                    document.getElementById('stepDesc5').classList.add('active');
+                    document.getElementById('step4').classList.remove('active');
+                    document.getElementById('step5').classList.add('active');
+
+                    document.getElementById('line2').classList.add('active');
+                    document.getElementById('dot2').classList.add('active');
+                    document.getElementById('dot3').classList.add('active');
+
+                    setTimeout(() => {
+                        createDataFlow(570, 500, 570, 350);
+                    }, 1000);
+
+                    // Show deployment overlay
+                    setTimeout(() => {
+                        document.getElementById('deploymentOverlay').classList.add('active');
+                        animateProgress();
+                    }, 2000);
+
+                    // Show deployed chatbot
+                    setTimeout(() => {
+                        document.getElementById('deploymentOverlay').classList.remove('active');
+                        document.getElementById('chatbotPreview').classList.add('active');
+                    }, 7000);
+                },
+                duration: 9000
+            }
+        ];
+
+        // Function to create data flow animation
+        function createDataFlow(x1, y1, x2, y2) {
+            // Create multiple data particles
+            for (let i = 0; i < 5; i++) {
+                setTimeout(() => {
+                    const particle = document.createElement('div');
+                    particle.className = 'data-flow';
+                    particle.style.left = (x1 + 100) + 'px';
+                    particle.style.top = (y1 + 50) + 'px';
+                    document.querySelector('.container').appendChild(particle);
+
+                    // Set the animation
+                    const distance = Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
+                    const angle = Math.atan2(y2 - y1, x2 - x1);
+                    const animDuration = distance / 100 * 1; // 1 second per 100px
+
+                    particle.style.animation = `none`;
+
+                    // Trigger reflow
+                    void particle.offsetWidth;
+
+                    particle.style.transition = `transform ${animDuration}s linear, opacity ${animDuration}s linear`;
+                    particle.style.transform = `translate(${(x2 - x1)}px, ${(y2 - y1)}px) scale(0.5)`;
+                    particle.style.opacity = '0';
+                    particle.style.left = (x1 + 100) + 'px';
+                    particle.style.top = (y1 + 50) + 'px';
+                    particle.style.opacity = '0.8';
+
+                    // Remove particle after animation
+                    setTimeout(() => {
+                        particle.remove();
+                    }, animDuration * 1000);
+
+                }, i * 300);
+            }
+        }
+
+        // Function to animate progress bar
+        function animateProgress() {
+            const progressFill = document.getElementById('progressFill');
+            const deployStatus = document.getElementById('deployStatus');
+            const statuses = [
+                "Initializing...",
+                "Loading AI models...",
+                "Configuring product catalog...",
+                "Setting up personality traits...",
+                "Finalizing deployment...",
+                "Chatbot ready!"
+            ];
+
+            let progress = 0;
+            const interval = setInterval(() => {
+                progress += 5;
+                progressFill.style.width = `${progress}%`;
+
+                if (progress % 20 === 0) {
+                    deployStatus.textContent = statuses[progress / 20];
+                }
+
+                if (progress >= 100) {
+                    clearInterval(interval);
+                }
+            }, 250);
+        }
+
+        // Function to advance to next step
+        function nextStep() {
+            if (!animationRunning) return;
+
+            if (currentStep < steps.length) {
+                steps[currentStep].execute();
+                setTimeout(() => {
+                    currentStep++;
+                    nextStep();
+                }, steps[currentStep].duration);
+            } else {
+                // Reset animation after a delay
+                setTimeout(resetAnimation, 3000);
+            };
+            nextStep();
+        };
+    </script> -->
+</body>
+</html>

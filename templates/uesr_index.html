@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI BOT | ADMIN</title>
+    <link rel="shortcut icon" href="{%static 'img\ai-bot-favicon.svg' %}" type="image/x-icon">
+
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{%static 'css/admin_styles.css' %}">
+    <style>
+        .sidebar-header {
+    display: flex;
+    align-items: center; /* Align items vertically */
+    gap: 10px; /* Space between image and text */
+}
+
+.logo {
+    width: 50px;
+    height: 50px;
+}
+
+    </style>
+</head>
+
+<body>
+    <!-- Mobile Menu Toggle Button -->
+    <button class="sidebar-toggle" id="sidebarToggle">
+        <i class="bi bi-list"></i>
+    </button>
+
+    <!-- Overlay for mobile menu -->
+    <div class="overlay" id="overlay"></div>
+
+    <div class="d-flex">
+        <!-- Sidebar -->
+        <nav class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <img src="{% static 'img/ai-bot-favicon.svg' %}" alt="AI Bot Logo" class="logo">
+                <h3>AI-BOT</h3>
+            </div>
+            <div class="p-3">
+                <ul class="nav flex-column">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="{%url 'index' %}">
+                            <i class="bi bi-speedometer2"></i> Dashboard
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">
+                            <i class="bi bi-globe"></i> Websites
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{%url 'bots' %}">
+                            <i class="bi bi-chat-dots"></i> Chatbots
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'analytics_dashboard' %}">
+                            <i class="bi bi-diagram-3"></i> Analytics
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">
+                            <i class="bi bi-gear"></i> Settings
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">
+                            <i class="bi bi-question-circle"></i> Help
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <div class="main-content" id="mainContent">
+            <!-- Top Navbar -->
+            <div class="top-navbar">
+                <div class="navbar-search">
+                    <i class="bi bi-search"></i>
+                    <input type="text" class="form-control" placeholder="Search">
+                </div>
+                <div class="user-menu dropdown">
+                    <button class="btn dropdown-toggle" type="button" id="userMenu" data-bs-toggle="dropdown"
+                        aria-expanded="false">
+                        <i class="bi bi-person-circle me-2"></i> {{request.user.company_name}}
+                    </button>
+                    <ul class="dropdown-menu" aria-labelledby="userMenu">
+                        <li><a class="dropdown-item" href="#"><i class="bi bi-person me-2"></i> Profile</a></li>
+                        <li><a class="dropdown-item" href="#"><i class="bi bi-gear me-2"></i> Settings</a></li>
+                        <li>
+                            <hr class="dropdown-divider">
+                        </li>
+                        <li><a class="dropdown-item" href="{%url 'signout' %}"><i
+                                    class="bi bi-box-arrow-right me-2"></i> Logout</a></li>
+                    </ul>
+                </div>
+            </div>
+            {% block content %}
+            <!-- Tab Switcher -->
+            <div class="tab-switcher">
+                <div class="tab active">Admin</div>
+                <div class="tab">User</div>
+            </div>
+
+            <!-- Stats Cards Row -->
+            <div class="row g-3 mb-3">
+                <div class="col-sm-6 col-md-6 col-lg-3">
+                    <div class="dashboard-card stat-card">
+                        <i class="bi bi-chat-dots"></i>
+                        <div class="stat-number">14</div>
+                        <div class="stat-title">Active Chatbots</div>
+                    </div>
+                </div>
+                <div class="col-sm-6 col-md-6 col-lg-3">
+                    <div class="dashboard-card stat-card">
+                        <i class="bi bi-globe"></i>
+                        <div class="stat-number">6</div>
+                        <div class="stat-title">Websites</div>
+                    </div>
+                </div>
+                <div class="col-sm-6 col-md-6 col-lg-3">
+                    <div class="dashboard-card stat-card">
+                        <i class="bi bi-people"></i>
+                        <div class="stat-number">1,254</div>
+                        <div class="stat-title">User Interactions</div>
+                    </div>
+                </div>
+                <div class="col-sm-6 col-md-6 col-lg-3">
+                    <div class="dashboard-card stat-card">
+                        <i class="bi bi-graph-up"></i>
+                        <div class="stat-number">32%</div>
+                        <div class="stat-title">Conversion Rate</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Main Content Row -->
+            <div class="row g-3">
+                <div class="col-lg-4">
+                    <!-- Websites Section -->
+                    <div class="dashboard-card">
+                        <h5 class="mb-4">Your Websites</h5>
+                        <div class="list-group">
+                            <a href="#"
+                                class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+                                E-commerce Site
+                                <span class="badge rounded-pill" style="background-color: var(--primary);">Active</span>
+                            </a>
+                            <a href="#"
+                                class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+                                Support Portal
+                                <span class="badge rounded-pill" style="background-color: var(--primary);">Active</span>
+                            </a>
+                            <a href="#"
+                                class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+                                Blog
+                                <span class="badge rounded-pill bg-secondary">Inactive</span>
+                            </a>
+                        </div>
+                        <button class="btn btn-outline-primary mt-3">
+                            <i class="bi bi-plus"></i> Add Website
+                        </button>
+                    </div>
+                </div>
+                <div class="col-lg-8">
+                    <!-- Chatbot Preview and Settings -->
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <div class="dashboard-card">
+                                <h5 class="mb-4">E-commerce Site Chatbot</h5>
+                                <div class="chatbot-conversation">
+                                    <div class="chat-message bot">
+                                        <div class="chat-bubble">
+                                            How can I help you today?
+                                        </div>
+                                    </div>
+                                    <div class="chat-message user">
+                                        <div class="chat-bubble">
+                                            Do you have this in blue?
+                                        </div>
+                                    </div>
+                                    <div class="chat-message bot">
+                                        <div class="chat-bubble">
+                                            Yes! We have 3 blue variants in stock.
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="dashboard-card chatbot-settings">
+                                <div class="d-flex justify-content-between align-items-center mb-4">
+                                    <h5 class="mb-0">Chatbot Settings</h5>
+                                    <div class="badge rounded-pill" style="background-color: var(--primary);">AI</div>
+                                </div>
+                                <div class="setting-item">
+                                    <span>Training Data: Product Catalog</span>
+                                    <div class="form-check form-switch">
+                                        <input class="form-check-input" type="checkbox" id="trainingSwitch" checked>
+                                    </div>
+                                </div>
+                                <div class="setting-item">
+                                    <span>Personality: Helpful</span>
+                                    <div class="form-check form-switch">
+                                        <input class="form-check-input" type="checkbox" id="personalitySwitch" checked>
+                                    </div>
+                                </div>
+                                <div class="setting-item">
+                                    <span>Auto-Responses</span>
+                                    <div class="form-check form-switch">
+                                        <input class="form-check-input" type="checkbox" id="autoResponseSwitch" checked>
+                                    </div>
+                                </div>
+                                <div class="text-center">
+                                    <button class="deploy-btn">Deploy Chatbot</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endblock %}
+        </div>
+
+    </div>
+
+    {% for message in messages%}
+    <div style="position: fixed;top: 100px;right: 30px;"
+        class="toast align-items-center text-white {{ message.tags }} border-0" role="alert" aria-live="assertive"
+        aria-atomic="true">
+        <div class="d-flex">
+            <div class="toast-body">
+                {{message}}
+            </div>
+            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"
+                aria-label="Close"></button>
+        </div>
+    </div>
+    {% endfor%}
+    <!-- Bootstrap 5 JS Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Custom JS -->
+    <script>
+        // Tab switcher functionality
+        document.querySelectorAll('.tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                document.querySelector('.tab.active').classList.remove('active');
+                tab.classList.add('active');
+            });
+        });
+
+        // Mobile sidebar toggle
+        document.getElementById('sidebarToggle').addEventListener('click', toggleSidebar);
+        document.getElementById('overlay').addEventListener('click', toggleSidebar);
+
+        // Close sidebar when clicking on a link (for mobile)
+        document.querySelectorAll('.sidebar .nav-link').forEach(link => {
+            link.addEventListener('click', () => {
+                if (window.innerWidth < 992) {
+                    toggleSidebar();
+                }
+            });
+        });
+
+        function toggleSidebar() {
+            document.getElementById('sidebar').classList.toggle('active');
+            document.getElementById('overlay').classList.toggle('active');
+        }
+
+        // Resize handler
+        window.addEventListener('resize', () => {
+            if (window.innerWidth >= 992) {
+                document.getElementById('sidebar').classList.remove('active');
+                document.getElementById('overlay').classList.remove('active');
+            }
+        });
+    </script>
+     <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            // Select all alert elements
+            const alerts = document.querySelectorAll('.alert');
+
+            // Loop through each alert
+            alerts.forEach((alert, index) => {
+                setTimeout(() => {
+                    // Add fade-out effect
+                    alert.style.transition = 'opacity 0.5s ease';
+                    alert.style.opacity = '0';
+                    setTimeout(() => {
+                        alert.remove(); // Remove the element from the DOM
+                    }, 9000); // Wait for fade-out to complete
+                }, 9000); // Start fade-out after 3 seconds
+            });
+        });
+        // Display Toast Messages
+        document.addEventListener("DOMContentLoaded", function () {
+            const toasts = document.querySelectorAll('.toast');
+
+            toasts.forEach(toastEl => {
+                const toast = new bootstrap.Toast(toastEl, { delay: 6000 });
+
+                // Play a beep sound when the toast is shown
+                toastEl.addEventListener('shown.bs.toast', () => {
+                    const context = new (window.AudioContext || window.webkitAudioContext)();
+                    const oscillator = context.createOscillator();
+                    oscillator.type = 'sine'; // Simple beep sound
+                    oscillator.frequency.setValueAtTime(880, context.currentTime); // Frequency in Hz
+                    oscillator.connect(context.destination);
+                    oscillator.start();
+                    setTimeout(() => {
+                        oscillator.stop();
+                    }, 200); // Play for 200ms
+                });
+
+                toast.show();
+            });
+        });
+
+
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,82 @@
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600">
+                        <!-- Transparent background -->
+                        
+                        <!-- Web App UI Frame -->
+                        <rect x="100" y="50" width="600" height="500" rx="10" fill="rgba(255,255,255,0.9)" stroke="#38b6ff" stroke-width="2"/>
+                        
+                        <!-- Header Bar -->
+                        <rect x="100" y="50" width="600" height="60" rx="10" fill="#082363"/>
+                        <text x="140" y="90" font-family="Arial" font-size="24" fill="#ffffff" font-weight="bold">AI Chatbot Builder</text>
+                        
+                        <!-- Left Panel - Site Selection -->
+                        <rect x="100" y="110" width="200" height="440" fill="rgba(240,244,248,0.9)" stroke="#38b6ff" stroke-width="1"/>
+                        <text x="120" y="140" font-family="Arial" font-size="18" fill="#38b6ff" font-weight="bold">Your Websites</text>
+                        
+                        <!-- Website List -->
+                        <rect x="110" y="160" width="180" height="50" rx="5" fill="rgba(255,255,255,0.9)" stroke="#38b6ff" stroke-width="2"/>
+                        <text x="130" y="190" font-family="Arial" font-size="14" fill="#38b6ff">E-commerce Site</text>
+                        <circle cx="270" cy="185" r="8" fill="#38b6ff"/>
+                        <text x="270" cy="185" font-family="Arial" font-size="12" fill="white" text-anchor="middle" dominant-baseline="middle">✓</text>
+                        
+                        <rect x="110" y="220" width="180" height="50" rx="5" fill="rgba(255,255,255,0.9)" stroke="#38b6ff" stroke-width="1"/>
+                        <text x="130" y="250" font-family="Arial" font-size="14" fill="#38b6ff">Support Portal</text>
+                        
+                        <rect x="110" y="280" width="180" height="50" rx="5" fill="rgba(255,255,255,0.9)" stroke="#38b6ff" stroke-width="1"/>
+                        <text x="130" y="310" font-family="Arial" font-size="14" fill="#38b6ff">Blog</text>
+                        
+                        <rect x="130" y="350" width="140" height="40" rx="20" fill="#38b6ff"/>
+                        <text x="200" y="375" font-family="Arial" font-size="14" fill="white" text-anchor="middle">Add Website</text>
+                        
+                        <!-- Main Panel - Chat Configuration -->
+                        <rect x="300" y="110" width="400" height="440" fill="rgba(255,255,255,0.9)"/>
+                        <text x="330" y="140" font-family="Arial" font-size="18" fill="#38b6ff" font-weight="bold">E-commerce Site Chatbot</text>
+                        
+                        <!-- Bot Preview -->
+                        <rect x="330" y="160" width="340" height="180" rx="10" fill="rgba(249,251,253,0.9)" stroke="#38b6ff" stroke-width="1"/>
+                        
+                        <!-- Chat Messages in Preview -->
+                        <rect x="350" y="180" width="200" height="40" rx="18" fill="#38b6ff"/>
+                        <text x="370" y="205" font-family="Arial" font-size="12" fill="white">How can I help you today?</text>
+                        
+                        <rect x="450" y="230" width="200" height="40" rx="18" fill="rgba(240,244,248,0.9)" stroke="#38b6ff" stroke-width="1"/>
+                        <text x="470" y="255" font-family="Arial" font-size="12" fill="#082363">Do you have this in blue?</text>
+                        
+                        <rect x="350" y="280" width="240" height="40" rx="18" fill="#38b6ff"/>
+                        <text x="370" y="305" font-family="Arial" font-size="12" fill="white">Yes! We have 3 blue variants in stock.</text>
+                        
+                        <!-- Bot Icon -->
+                        <circle cx="630" cy="190" r="30" fill="#082363"/>
+                        <circle cx="630" cy="190" r="20" fill="#38b6ff"/>
+                        <path d="M620 190 L640 190 M630 180 L630 200" stroke="white" stroke-width="3"/>
+                        
+                        <!-- Settings Panel -->
+                        <text x="330" y="370" font-family="Arial" font-size="16" fill="#38b6ff" font-weight="bold">Chatbot Settings</text>
+                        
+                        <!-- Training Data Option -->
+                        <rect x="330" y="390" width="340" height="50" rx="5" fill="rgba(249,251,253,0.9)" stroke="#38b6ff" stroke-width="1"/>
+                        <text x="350" y="420" font-family="Arial" font-size="14" fill="#38b6ff">Training Data: Product Catalog</text>
+                        <rect x="620" y="400" width="30" height="16" rx="8" fill="#38b6ff"/>
+                        <circle cx="637" cy="408" r="7" fill="white"/>
+                        
+                        <!-- Personality Option -->
+                        <rect x="330" y="450" width="340" height="50" rx="5" fill="rgba(249,251,253,0.9)" stroke="#38b6ff" stroke-width="1"/>
+                        <text x="350" y="480" font-family="Arial" font-size="14" fill="#38b6ff">Personality: Helpful & Friendly</text>
+                        <rect x="620" y="460" width="30" height="16" rx="8" fill="#38b6ff"/>
+                        <circle cx="637" cy="468" r="7" fill="white"/>
+                        
+                        <!-- Deploy Button -->
+                        <rect x="480" y="520" width="190" height="50" rx="25" fill="#082363"/>
+                        <text x="575" y="550" font-family="Arial" font-size="16" fill="white" text-anchor="middle" font-weight="bold">Deploy Chatbot</text>
+                        
+                        <!-- Connection Lines -->
+                        <path d="M290 210 C 310 210, 310 210, 330 210" stroke="#38b6ff" stroke-width="2" stroke-dasharray="5,5"/>
+                        <path d="M570 520 C 570 500, 570 500, 570 350" stroke="#38b6ff" stroke-width="2" stroke-dasharray="5,5"/>
+                        
+                        <!-- AI Integration Icons -->
+                        <circle cx="500" cy="370" r="15" fill="#38b6ff" opacity="0.9"/>
+                        <text x="500" y="375" font-family="Arial" font-size="14" fill="white" text-anchor="middle">AI</text>
+                        
+                        <circle cx="310" cy="210" r="8" fill="#38b6ff" opacity="0.9"/>
+                        <circle cx="570" cy="500" r="8" fill="#38b6ff" opacity="0.9"/>
+                        <circle cx="570" cy="350" r="8" fill="#38b6ff" opacity="0.9"/>
+                      </svg>

@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI-Bot | Intelligent Chat Solutions</title>
+    <link rel="shortcut icon" href="{%static 'img\ai-bot-favicon.svg' %}" type="image/x-icon">
+    <link rel="stylesheet" href="{%static 'css/landing_styles.css' %}">
+   
+</head>
+<body>
+    <header>
+        <div class="container">
+            <nav class="navbar">
+                <div class="logo">
+                    <div class="logo-icon">AI</div>
+                    <span>AI-Bot</span>
+                </div>
+                <div class="nav-links">
+                    <a href="#features">Features</a>
+                    <a href="#how-it-works">How It Works</a>
+                    <a href="#pricing">Pricing</a>
+                    <a href="#testimonials">Testimonials</a>
+                </div>
+                <a href="{%url 'signin' %}" class="btn btn-primary">Get Started</a>
+            </nav>
+        </div>
+    </header>
+
+    <section class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <div class="hero-text">
+                    <h1>Transform Your Website with <span>AI-Powered</span> Executive Interactions</h1>
+                    <p>AI-Bot provides seamless CDN integration and intelligent chat interfaces that understand your company's data, acting as virtual executives for your visitors.</p>
+                    <div class="hero-buttons">
+                        <a href="#pricing" class="btn btn-primary">View Plans</a>
+                        <a href="#demo" class="btn btn-outline">Request Demo</a>
+                    </div>
+                </div>
+                <div class="hero-image">
+                  
+                    <iframe src="{% url 'anim' %}" width="100%" height="600" frameborder="0" 
+    style="max-width: 800px; height: 100vh; max-height: 700px; border: none; display: block; margin: auto;">
+</iframe>
+
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="features" id="features">
+        <div class="container">
+            <div class="section-title">
+                <h2>Powerful <span>Features</span></h2>
+                <p>Enhance your web application with our comprehensive AI solutions</p>
+            </div>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon"><img src="{%static 'img\artificial-intelligence.png' %}" width="50px" alt="brain"></div>
+                    <h3>Intelligent Data Processing</h3>
+                    <p>Our AI learns from your company data, policies, and documentation to provide accurate and contextual responses.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon"><img src="{%static 'img\integration.png' %}" width="50px" alt="integration"></div>
+                    <h3>Global CDN Integration</h3>
+                    <p>Lightning-fast performance with our distributed CDN infrastructure, ensuring minimal latency worldwide.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon"><img src="{%static 'img\natural-language-processing.png' %}" width="50px" alt="brain"></div>
+                    <h3>Natural Conversations</h3>
+                    <p>Advanced language processing creates human-like interactions that represent your brand voice.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon"><img src="{%static 'img\cyber-security.png' %}" width="50px" alt="brain"></div>
+                    <h3>Enterprise-Grade Security</h3>
+                    <p>End-to-end encryption and compliance with global data protection regulations.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon"><img src="{%static 'img\statistics.png' %}" width="50px" alt="brain"></div>
+                    <h3>Detailed Analytics</h3>
+                    <p>Gain insights from customer interactions to improve your services and identify opportunities.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon"> <img src="{%static 'img\data-integration.png' %}" width="50px" alt="brain"></div>
+                    <h3>Easy Integration</h3>
+                    <p>Simple implementation with our JavaScript SDK or REST API for any website or application.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="how-it-works" id="how-it-works">
+        <div class="container">
+            <div class="section-title">
+                <h2>How <span>AI-Bot</span> Works</h2>
+                <p>A simple process to transform your website with AI-powered conversations</p>
+            </div>
+            <div class="steps">
+                <div class="step">
+                    <div class="step-number">1</div>
+                    <h3>Data Integration</h3>
+                    <p style="padding: 5px;">Connect your company documents, FAQs, and knowledge base to our secure platform.</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <h3>AI Training</h3>
+                    <p style="padding: 5px;">Our system analyzes and learns from your data to represent your brand accurately.</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <h3>Customization</h3>
+                    <p style="padding: 5px;">Personalize the interface, tone, and responses to match your company style.</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">4</div>
+                    <h3>Go Live</h3>
+                    <p style="padding: 5px;">Add a single line of code to integrate AI-Bot into your website or application.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="pricing" id="pricing">
+        <div class="container">
+            <div class="section-title">
+                <h2>Simple <span>Pricing</span> Plans</h2>
+                <p>Choose the package that suits your business needs</p>
+            </div>
+            <div class="pricing-options">
+                <div class="pricing-card">
+                    <div class="pricing-header">
+                        <h3 class="pricing-name">Starter</h3>
+                        <div class="pricing-price">$99<span>/month</span></div>
+                        <p class="pricing-description">Perfect for small businesses</p>
+                    </div>
+                    <div class="pricing-features">
+                        <div class="pricing-feature">
+                            <i>✓</i>
+                            <span>Up to 1,000 conversations/month</span>
+                        </div>
+                        <div class="pricing-feature">
+                            <i>✓</i>
+                            <span>Basic data integration</span>
+                        </div>
+                        <div class="pricing-feature">
+                            <i>✓</i>
+                            <span>Standard CDN delivery</span>
+                        </div>
+                        <div class="pricing-feature">
+                            <i>✓</i>
+                            <span>Email support</span>
+                        </div>
+                    </div>
+                    <div class="pricing-action">
+                        <a href="#contact" class="btn btn-outline">Get Started</a>
+                    </div>
+                </div>
+                <div class="pricing-card featured">
+                    <div class="pricing-header">
+                        <h3 class="pricing-name">Business</h3>
+                        <div class="pricing-price">$299<span>/month</span></div>
+                        <p class="pricing-description">Ideal for growing companies</p>
+                    </div>
+                    <div class="pricing-features">
+                        <div class="pricing-feature">
+                            <i>✓</i>
+                            <span>Up to 10,000 conversations/month</span>
+                        </div>
+                        <div class="pricing-feature">
+                            <i>✓</i>
+                            <span>Advanced data integration</span>
+                        </div>
+                        <div class="pricing-feature">
+                            <i>✓</i>
+                            <span>Global CDN with priority routing</span>
+                        </div>
+                        <div class="pricing-feature">
+                            <i>✓</i>
+                            <span>Dedicated support</span>
+                        </div>
+                        <div class="pricing-feature">
+                            <i>✓</i>
+                            <span>Custom branding</span>
+                        </div>
+                    </div>
+                    <div class="pricing-action">
+                        <a href="#contact" class="btn btn-primary">Get Started</a>
+                    </div>
+                </div>
+                <div class="pricing-card">
+                    <div class="pricing-header">
+                        <h3 class="pricing-name">Enterprise</h3>
+                        <div class="pricing-price">Custom<span> pricing</span></div>
+                        <p class="pricing-description">For large organizations</p>
+                    </div>
+                    <div class="pricing-features">
+                        <div class="pricing-feature">
+                            <i>✓</i>
+                            <span>Unlimited conversations</span>
+                        </div>
+                        <div class="pricing-feature">
+                            <i>✓</i>
+                            <span>Full enterprise data integration</span>
+                        </div>
+                        <div class="pricing-feature">
+                            <i>✓</i>
+                            <span>Premium global CDN infrastructure</span>
+                        </div>
+                        <div class="pricing-feature">
+                            <i>✓</i>
+                            <span>24/7 priority support</span>
+                        </div>
+                        <div class="pricing-feature">
+                            <i>✓</i>
+                            <span>Custom AI model training</span>
+                        </div>
+                        <div class="pricing-feature">
+                            <i>✓</i>
+                            <span>SLA guarantees</span>
+                        </div>
+                    </div>
+                    <div class="pricing-action">
+                        <a href="#contact" class="btn btn-outline">Contact Sales</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="testimonials" id="testimonials">
+        <div class="container">
+            <div class="section-title">
+                <h2>Client <span>Success</span> Stories</h2>
+                <p>See how AI-Bot is transforming businesses around the world</p>
+            </div>
+            <div class="testimonials-grid">
+                <div class="testimonial-card">
+                    <p class="testimonial-quote">AI-Bot has dramatically improved our customer engagement. The AI responses are so natural that most users don't realize they're talking to a bot until we tell them.</p>
+                    <div class="testimonial-author">
+                        <div class="author-avatar">JD</div>
+                        <div class="author-info">
+                            <h4>Jane Doe</h4>
+                            <p>CTO, TechCorp Inc.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="testimonial-card">
+                    <p class="testimonial-quote">Implementing AI-Bot cut our customer service response time by 78% while maintaining excellent quality. Our team can now focus on more complex issues.</p>
+                    <div class="testimonial-author">
+                        <div class="author-avatar">MS</div>
+                        <div class="author-info">
+                            <h4>Mark Smith</h4>
+                            <p>Customer Support Director, Retail Solutions</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="testimonial-card">
+                    <p class="testimonial-quote">The CDN integration ensures our global audience gets quick responses regardless of their location. It's been a game-changer for our international expansion.</p>
+                    <div class="testimonial-author">
+                        <div class="author-avatar">AL</div>
+                        <div class="author-info">
+                            <h4>Anna Lee</h4>
+                            <p>VP of Product, Global Ventures</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="cta" id="contact">
+        <div class="container">
+            <h2>Ready to Transform Your Customer Experience?</h2>
+            <p>Join hundreds of businesses that use AI-Bot to provide exceptional service through intelligent conversations.</p>
+            <div class="cta-buttons">
+                <a href="#demo" class="btn btn-secondary">Request Demo</a>
+                <a href="#signup" class="btn btn-outline">Start Free Trial</a>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-about">
+                    <div class="footer-logo">
+                        <div class="logo-icon">AI</div>
+                        <span>AI-Bot</span>
+                    </div>
+                    <p>AI-Bot provides intelligent chat interfaces and CDN solutions for businesses looking to enhance their online customer experience with AI technology.</p>
+                    <div class="footer-social">
+                        <a href="#"><span>f</span></a>
+                        <a href="#"><span>t</span></a>
+                        <a href="#"><span>in</span></a>
+                        <a href="#"><span>ig</span></a>
+                    </div>
+                </div>
+                <div class="footer-links">
+                    <h3>Company</h3>
+                    <ul>
+                        <li><a href="#">About Us</a></li>
+                        <li><a href="#">Careers</a></li>
+                        <li><a href="#">Blog</a></li>
+                        <li><a href="#">Press</a></li>
+                    </ul>
+                </div>
+                <div class="footer-links">
+                    <h3>Resources</h3>
+                    <ul>
+                        <li><a href="#">Documentation</a></li>
+                        <li><a href="#">API Reference</a></li>
+                        <li><a href="#">Status</a></li>
+                        <li><a href="#">Case Studies</a></li>
+                    </ul>
+                </div>
+                <div class="footer-links">
+                    <h3>Support</h3>
+                    <ul>
+                        <li><a href="#">Help Center</a></li>
+                        <li><a href="#">Contact Us</a></li>
+                        <li><a href="#">Privacy Policy</a></li>
+                        <li><a href="#">Terms of Service</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="copyright">
+                <p>&copy; 2025 AI-Bot. All rights reserved.</p>
+                <p class="text-muted">Powered by<a href="https://www.byteboot.in" style="text-decoration: none;color: #25c4e0;"> ByteBoot Techno solutions Pvt Ltd </a></p>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>

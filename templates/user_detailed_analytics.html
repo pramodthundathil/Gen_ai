@@ -1,0 +1,350 @@
+<!-- user_detailed_analytics.html -->
+{% extends 'index.html' %}
+
+{% block content %}
+
+
+<style>
+    /* analytics.css - Add this to your static CSS files */
+:root {
+    --primary: #38e0ff;
+    --primary-dark: #3a56d4;
+    --primary-light: #4f70ff;
+    --secondary: #191C24;
+    --light: #6C7293;
+    --dark: #000000;
+    --accent: #00b4d8;
+    --accent-dark: #0096c7;
+    --danger: #ef476f;
+    --success: #06d6a0;
+    --warning: #ffd166;
+    --card-bg: #ffffff;
+    --hover-bg: #f0f4ff;
+}
+
+/* Analytics container */
+.analytics-container {
+    padding: 20px;
+}
+
+/* Page title */
+.page-title {
+    color: var(--secondary);
+    margin-bottom: 20px;
+    font-weight: 600;
+}
+
+/* Cards */
+.card {
+    background-color: var(--card-bg);
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+    border: none;
+    overflow: hidden;
+}
+
+.card-header {
+    background-color: rgba(56, 224, 255, 0.1);
+    border-bottom: 1px solid rgba(56, 224, 255, 0.2);
+    padding: 15px 20px;
+}
+
+.card-title {
+    margin: 0;
+    color: var(--secondary);
+    font-weight: 600;
+    font-size: 1.1rem;
+}
+
+.card-body {
+    padding: 20px;
+}
+
+/* Tables */
+.table {
+    width: 100%;
+    margin-bottom: 0;
+}
+
+.table th {
+    background-color: rgba(56, 224, 255, 0.1);
+    color: var(--secondary);
+    font-weight: 600;
+    border-top: none;
+    padding: 12px 15px;
+}
+
+.table td {
+    padding: 12px 15px;
+    vertical-align: middle;
+    border-color: rgba(108, 114, 147, 0.1);
+}
+
+.table-hover tbody tr:hover {
+    background-color: var(--hover-bg);
+}
+
+/* Buttons */
+.btn-primary {
+    background-color: var(--primary-dark);
+    border-color: var(--primary-dark);
+}
+
+.btn-primary:hover {
+    background-color: var(--primary-light);
+    border-color: var(--primary-light);
+}
+
+.btn-outline-primary {
+    color: var(--primary-dark);
+    border-color: var(--primary-dark);
+}
+
+.btn-outline-primary:hover {
+    background-color: var(--primary-dark);
+    border-color: var(--primary-dark);
+    color: white;
+}
+
+.btn-outline-secondary {
+    color: var(--secondary);
+    border-color: var(--secondary);
+}
+
+.btn-outline-secondary:hover {
+    background-color: var(--secondary);
+    border-color: var(--secondary);
+}
+
+/* Summary items in detailed view */
+.summary-item {
+    padding: 10px 0;
+    border-bottom: 1px solid rgba(108, 114, 147, 0.1);
+    display: flex;
+    justify-content: space-between;
+}
+
+.summary-item:last-child {
+    border-bottom: none;
+}
+
+.summary-label {
+    font-weight: 600;
+    color: var(--secondary);
+}
+
+.summary-value {
+    color: var(--light);
+}
+
+/* Charts */
+canvas {
+    width: 100% !important;
+    height: 250px !important;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .analytics-container {
+        padding: 10px;
+    }
+    
+    .card-header {
+        padding: 12px 15px;
+    }
+    
+    .card-body {
+        padding: 15px;
+    }
+    
+    .btn-group {
+        display: flex;
+        width: 100%;
+        margin-bottom: 15px;
+    }
+    
+    .btn-group .btn {
+        flex: 1;
+    }
+}
+</style>
+<div class="analytics-container">
+    <div class="row mb-4">
+        <div class="col-md-8">
+            <h2 class="page-title">
+                
+                Detailed Analytics for {{ detailed_stats.user.company_name }}
+            </h2>
+        </div>
+        <div class="col-md-4 text-end">
+            <a href="{% url 'download_analytics_pdf' %}?user_id={{ detailed_stats.user.id }}" class="btn btn-primary">
+                <i class="fas fa-download me-1"></i> Download PDF Report
+            </a>
+        </div>
+    </div>
+
+    <div class="row mb-4">
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title">Summary</h5>
+                </div>
+                <div class="card-body">
+                    <div class="summary-item">
+                        <span class="summary-label">Total Sessions:</span>
+                        <span class="summary-value">{{ detailed_stats.total_sessions }}</span>
+                    </div>
+                    <div class="summary-item">
+                        <span class="summary-label">Total Messages:</span>
+                        <span class="summary-value">{{ detailed_stats.total_messages }}</span>
+                    </div>
+                    <div class="summary-item">
+                        <span class="summary-label">User Messages:</span>
+                        <span class="summary-value">{{ detailed_stats.user_messages }}</span>
+                    </div>
+                    <div class="summary-item">
+                        <span class="summary-label">Bot Messages:</span>
+                        <span class="summary-value">{{ detailed_stats.bot_messages }}</span>
+                    </div>
+                    <div class="summary-item">
+                        <span class="summary-label">Email:</span>
+                        <span class="summary-value">{{ detailed_stats.user.email }}</span>
+                    </div>
+                    <div class="summary-item">
+                        <span class="summary-label">Phone:</span>
+                        <span class="summary-value">{{ detailed_stats.user.phone }}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title">Daily Message Activity (Last 30 Days)</h5>
+                </div>
+                <div class="card-body">
+                    <canvas id="dailyActivityChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title">Weekly Message Activity</h5>
+                </div>
+                <div class="card-body">
+                    <canvas id="weeklyActivityChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title">Most Active Sessions</h5>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-sm table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Session ID</th>
+                                    <th>Created At</th>
+                                    <th>Message Count</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for session in detailed_stats.top_sessions %}
+                                <tr>
+                                    <td>{{ session.session_id }}</td>
+                                    <td>{{ session.created_at|date:"Y-m-d H:i" }}</td>
+                                    <td>{{ session.message_count }}</td>
+                                </tr>
+                                {% empty %}
+                                <tr>
+                                    <td colspan="3" class="text-center">No session data available</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% block extra_scripts %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Fetch chart data from API
+        fetch('{% url "get_chart_data" detailed_stats.user.id %}')
+            .then(response => response.json())
+            .then(data => {
+                // Create daily activity chart
+                const dailyData = data.daily_data;
+                const dailyDates = dailyData.map(item => item.date);
+                const dailyCounts = dailyData.map(item => item.count);
+
+                const dailyCtx = document.getElementById('dailyActivityChart').getContext('2d');
+                new Chart(dailyCtx, {
+                    type: 'line',
+                    data: {
+                        labels: dailyDates,
+                        datasets: [{
+                            label: 'Daily Messages',
+                            data: dailyCounts,
+                            fill: false,
+                            borderColor: '#3a56d4',
+                            tension: 0.1
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        scales: {
+                            y: {
+                                beginAtZero: true
+                            }
+                        }
+                    }
+                });
+
+                // Create weekly activity chart
+                const weeklyData = data.weekly_data;
+                const weeklyLabels = weeklyData.map(item => item.week);
+                const weeklyCounts = weeklyData.map(item => item.count);
+
+                const weeklyCtx = document.getElementById('weeklyActivityChart').getContext('2d');
+                new Chart(weeklyCtx, {
+                    type: 'bar',
+                    data: {
+                        labels: weeklyLabels,
+                        datasets: [{
+                            label: 'Weekly Messages',
+                            data: weeklyCounts,
+                            backgroundColor: '#00b4d8'
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        scales: {
+                            y: {
+                                beginAtZero: true
+                            }
+                        }
+                    }
+                });
+            })
+            .catch(error => {
+                console.error('Error fetching chart data:', error);
+            });
+    });
+</script>
+{% endblock %}
+{% endblock %}
