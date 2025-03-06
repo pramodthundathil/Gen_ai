@@ -391,7 +391,7 @@ def customer_details(request):
 
 from django.shortcuts import get_object_or_404, render
 from django.http import HttpResponse
-from weasyprint import HTML
+# from weasyprint import HTML
 from .models import ChatSession, CustomUser
 from django.template.loader import render_to_string
 
@@ -399,14 +399,14 @@ def generate_full_chat_report(request, user_id):
     user = get_object_or_404(CustomUser, id=user_id)
     sessions = ChatSession.objects.filter(client=user).prefetch_related("messages")
 
-    # Render the HTML template with chat data
+    # # Render the HTML template with chat data
     html_string = render_to_string('chat_report_template.html', {'user': user, 'sessions': sessions})
 
-    # Generate the PDF from HTML
-    pdf = HTML(string=html_string).write_pdf()
+    # # Generate the PDF from HTML
+    # pdf = HTML(string=html_string).write_pdf()
 
-    # Create a response with PDF content
-    response = HttpResponse(pdf, content_type='application/pdf')
+    # # Create a response with PDF content
+    response = HttpResponse(html_string, content_type='application/pdf')
     response['Content-Disposition'] = f'attachment; filename="chat_report_{user.company_name}.pdf"'
 
     return response
@@ -422,12 +422,12 @@ from datetime import timedelta
 from .models import CustomUser, ChatSession, ChatMessage
 import io
 from django.http import FileResponse
-from reportlab.pdfgen import canvas
-from reportlab.lib.units import inch
-from reportlab.lib.pagesizes import letter
-from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Spacer
-from reportlab.lib import colors
-from reportlab.lib.styles import getSampleStyleSheet
+# from reportlab.pdfgen import canvas
+# from reportlab.lib.units import inch
+# from reportlab.lib.pagesizes import letter
+# from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Spacer
+# from reportlab.lib import colors
+# from reportlab.lib.styles import getSampleStyleSheet
 
 def get_user_chat_statistics(user_id=None, time_period=None):
     """
@@ -600,102 +600,102 @@ def generate_pdf_report(user_id=None):
     Returns:
     FileResponse: PDF file response
     """
-    # Get statistics
-    stats = get_user_chat_statistics(user_id)
+    # # Get statistics
+    # stats = get_user_chat_statistics(user_id)
     
-    # Create buffer for PDF file
-    buffer = io.BytesIO()
+    # # Create buffer for PDF file
+    # buffer = io.BytesIO()
     
-    # Create PDF document
-    doc = SimpleDocTemplate(buffer, pagesize=letter)
-    elements = []
+    # # Create PDF document
+    # doc = SimpleDocTemplate(buffer, pagesize=letter)
+    # elements = []
     
-    # Add styles
-    styles = getSampleStyleSheet()
-    title_style = styles['Title']
-    heading_style = styles['Heading2']
-    normal_style = styles['Normal']
+    # # Add styles
+    # styles = getSampleStyleSheet()
+    # title_style = styles['Title']
+    # heading_style = styles['Heading2']
+    # normal_style = styles['Normal']
     
-    # Add title
-    if user_id:
-        user = CustomUser.objects.get(id=user_id)
-        elements.append(Paragraph(f"Chat Analytics Report - {user.company_name}", title_style))
-    else:
-        elements.append(Paragraph("Chat Analytics Report - All Users", title_style))
+    # # Add title
+    # if user_id:
+    #     user = CustomUser.objects.get(id=user_id)
+    #     elements.append(Paragraph(f"Chat Analytics Report - {user.company_name}", title_style))
+    # else:
+    #     elements.append(Paragraph("Chat Analytics Report - All Users", title_style))
     
-    elements.append(Spacer(1, 0.25*inch))
-    elements.append(Paragraph(f"Generated on: {timezone.now().strftime('%Y-%m-%d %H:%M')}", normal_style))
-    elements.append(Spacer(1, 0.5*inch))
+    # elements.append(Spacer(1, 0.25*inch))
+    # elements.append(Paragraph(f"Generated on: {timezone.now().strftime('%Y-%m-%d %H:%M')}", normal_style))
+    # elements.append(Spacer(1, 0.5*inch))
     
-    # Create table data
-    if user_id:
-        elements.append(Paragraph("User Information", heading_style))
-        elements.append(Spacer(1, 0.25*inch))
+    # # Create table data
+    # if user_id:
+    #     elements.append(Paragraph("User Information", heading_style))
+    #     elements.append(Spacer(1, 0.25*inch))
         
-        user_info = [
-            ["Company Name", stats[0]['company_name']],
-            ["Email", stats[0]['email']],
-            ["Total Sessions", stats[0]['total_sessions']],
-            ["Total Messages", stats[0]['total_messages']],
-            ["User Messages", stats[0]['user_messages']],
-            ["Bot Messages", stats[0]['bot_messages']],
-            ["Avg Messages Per Session", stats[0]['avg_messages_per_session']],
-            ["Last Activity", stats[0]['last_activity'].strftime('%Y-%m-%d %H:%M') if stats[0]['last_activity'] else "N/A"]
-        ]
+    #     user_info = [
+    #         ["Company Name", stats[0]['company_name']],
+    #         ["Email", stats[0]['email']],
+    #         ["Total Sessions", stats[0]['total_sessions']],
+    #         ["Total Messages", stats[0]['total_messages']],
+    #         ["User Messages", stats[0]['user_messages']],
+    #         ["Bot Messages", stats[0]['bot_messages']],
+    #         ["Avg Messages Per Session", stats[0]['avg_messages_per_session']],
+    #         ["Last Activity", stats[0]['last_activity'].strftime('%Y-%m-%d %H:%M') if stats[0]['last_activity'] else "N/A"]
+    #     ]
         
-        user_table = Table(user_info, colWidths=[2*inch, 4*inch])
-        user_table.setStyle(TableStyle([
-            ('BACKGROUND', (0, 0), (0, -1), colors.lightgrey),
-            ('TEXTCOLOR', (0, 0), (0, -1), colors.black),
-            ('ALIGN', (0, 0), (-1, -1), 'LEFT'),
-            ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
-            ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
-            ('BACKGROUND', (0, 1), (-1, -1), colors.white),
-            ('GRID', (0, 0), (-1, -1), 1, colors.black)
-        ]))
+    #     user_table = Table(user_info, colWidths=[2*inch, 4*inch])
+    #     user_table.setStyle(TableStyle([
+    #         ('BACKGROUND', (0, 0), (0, -1), colors.lightgrey),
+    #         ('TEXTCOLOR', (0, 0), (0, -1), colors.black),
+    #         ('ALIGN', (0, 0), (-1, -1), 'LEFT'),
+    #         ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+    #         ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
+    #         ('BACKGROUND', (0, 1), (-1, -1), colors.white),
+    #         ('GRID', (0, 0), (-1, -1), 1, colors.black)
+    #     ]))
         
-        elements.append(user_table)
-    else:
-        elements.append(Paragraph("All Users Statistics", heading_style))
-        elements.append(Spacer(1, 0.25*inch))
+    #     elements.append(user_table)
+    # else:
+    #     elements.append(Paragraph("All Users Statistics", heading_style))
+    #     elements.append(Spacer(1, 0.25*inch))
         
-        # Create table header
-        table_data = [
-            ["Company", "Total Sessions", "Total Messages", "User Msgs", "Bot Msgs", "Avg Msgs/Session", "Last Activity"]
-        ]
+    #     # Create table header
+    #     table_data = [
+    #         ["Company", "Total Sessions", "Total Messages", "User Msgs", "Bot Msgs", "Avg Msgs/Session", "Last Activity"]
+    #     ]
         
-        # Add data rows
-        for user_stat in stats:
-            table_data.append([
-                user_stat['company_name'],
-                str(user_stat['total_sessions']),
-                str(user_stat['total_messages']),
-                str(user_stat['user_messages']),
-                str(user_stat['bot_messages']),
-                str(user_stat['avg_messages_per_session']),
-                user_stat['last_activity'].strftime('%Y-%m-%d') if user_stat['last_activity'] else "N/A"
-            ])
+    #     # Add data rows
+    #     for user_stat in stats:
+    #         table_data.append([
+    #             user_stat['company_name'],
+    #             str(user_stat['total_sessions']),
+    #             str(user_stat['total_messages']),
+    #             str(user_stat['user_messages']),
+    #             str(user_stat['bot_messages']),
+    #             str(user_stat['avg_messages_per_session']),
+    #             user_stat['last_activity'].strftime('%Y-%m-%d') if user_stat['last_activity'] else "N/A"
+    #         ])
         
-        # Create table and style
-        users_table = Table(table_data)
-        users_table.setStyle(TableStyle([
-            ('BACKGROUND', (0, 0), (-1, 0), colors.lightgrey),
-            ('TEXTCOLOR', (0, 0), (-1, 0), colors.black),
-            ('ALIGN', (0, 0), (-1, -1), 'LEFT'),
-            ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
-            ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
-            ('BACKGROUND', (0, 1), (-1, -1), colors.white),
-            ('GRID', (0, 0), (-1, -1), 1, colors.black)
-        ]))
+    #     # Create table and style
+    #     users_table = Table(table_data)
+    #     users_table.setStyle(TableStyle([
+    #         ('BACKGROUND', (0, 0), (-1, 0), colors.lightgrey),
+    #         ('TEXTCOLOR', (0, 0), (-1, 0), colors.black),
+    #         ('ALIGN', (0, 0), (-1, -1), 'LEFT'),
+    #         ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+    #         ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
+    #         ('BACKGROUND', (0, 1), (-1, -1), colors.white),
+    #         ('GRID', (0, 0), (-1, -1), 1, colors.black)
+    #     ]))
         
-        elements.append(users_table)
+    #     elements.append(users_table)
     
-    # Build PDF and save to buffer
-    doc.build(elements)
-    buffer.seek(0)
+    # # Build PDF and save to buffer
+    # doc.build(elements)
+    # buffer.seek(0)
     
-    # Create file response
-    return FileResponse(buffer, as_attachment=True, filename='chat_analytics_report.pdf')
+    # # Create file response
+    # return FileResponse(buffer, as_attachment=True, filename='chat_analytics_report.pdf')
 
 
 # views.py - Add these functions to your existing views.py
