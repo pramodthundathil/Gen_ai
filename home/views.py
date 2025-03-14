@@ -229,29 +229,126 @@ GEMINI_API_URL = "https://api.gemini.com/v1/chat"  # Update with actual Gemini A
 
 import google.generativeai as genai
 
+# import re
+# def preprocess_response(text):
+#     """
+#     Preprocess the response to handle markdown-like syntax.
+#     Converts:
+#     - ***text*** to <b><i>text</i></b> (bold + italic)
+#     - **text** to <b>text</b> (bold)
+#     - *text* to <i>text</i> (italic)
+#     - Newlines (\n) to <br> for line breaks
+#     """
+#     # Handle ***text*** (bold + italic)
+#     text = re.sub(r"\*\*\*(.*?)\*\*\*", r"<b><i>\1</i></b>", text)
+
+#     # Handle **text** (bold)
+#     text = re.sub(r"\*\*(.*?)\*\*", r"<b>\1</b>", text)
+
+#     # Handle *text* (italic)
+#     text = re.sub(r"\*(.*?)\*", r"<i>\1</i>", text)
+
+#     # Convert newline characters (\n) to <br>
+#     text = text.replace("\n", "<br>")
+
+#     return text
+
 import re
+
 def preprocess_response(text):
     """
-    Preprocess the response to handle markdown-like syntax.
+    Preprocess the response to handle markdown-like syntax and bullet points.
     Converts:
-    - ***text*** to <b><i>text</i></b> (bold + italic)
-    - **text** to <b>text</b> (bold)
-    - *text* to <i>text</i> (italic)
-    - Newlines (\n) to <br> for line breaks
+    - ***text*** to <strong><em>text</em></strong> (bold + italic)
+    - **text** to <strong>text</strong> (bold)
+    - *text* at the beginning of lines to proper list items
+    - Other *text* instances to <em>text</em> (italic)
+    - Newlines (\n) to proper HTML structure
     """
-    # Handle ***text*** (bold + italic)
-    text = re.sub(r"\*\*\*(.*?)\*\*\*", r"<b><i>\1</i></b>", text)
+    # First, identify if we have a list in the text
+    lines = text.split('\n')
+    in_list = False
+    result = []
+    
+    for i, line in enumerate(lines):
+        # Check if line starts with bullet point
+        if line.strip().startswith('*'):
+            # If this is the first bullet point, start the list
+            if not in_list:
+                result.append('<ul class="service-list">')
+                in_list = True
+            
+            # Remove the asterisk and leading spaces, then add as list item
+            cleaned_line = line.strip()[1:].strip()
+            result.append(f'<li>{cleaned_line}</li>')
+        else:
+            # If we're ending a list
+            if in_list:
+                result.append('</ul>')
+                in_list = False
+            
+            # Process other markdown in this line
+            processed_line = line
+            
+            # Handle ***text*** (bold + italic)
+            processed_line = re.sub(r"\*\*\*(.*?)\*\*\*", r"<strong><em>\1</em></strong>", processed_line)
+            
+            # Handle **text** (bold)
+            processed_line = re.sub(r"\*\*(.*?)\*\*", r"<strong>\1</strong>", processed_line)
+            
+            # Handle remaining *text* (italic) - but only if it's not a bullet point
+            processed_line = re.sub(r"\*(.*?)\*", r"<em>\1</em>", processed_line)
+            
+            result.append(processed_line)
+    
+    # Close the list if it's still open at the end
+    if in_list:
+        result.append('</ul>')
+    
+    # Join all lines with proper spacing
+    html = '\n'.join(result)
+    
+    # Add paragraph tags around text blocks for proper spacing
+    html = re.sub(r'([^<>]+)(?=<ul|$)', r'<p>\1</p>', html)
+    html = re.sub(r'(</ul>)\s*([^<>]+)', r'\1<p>\2</p>', html)
+    
+    # Clean up empty paragraphs and fix spacing
+    html = html.replace('<p></p>', '')
+    html = re.sub(r'<p>\s*</p>', '', html)
+    
+    return html
 
-    # Handle **text** (bold)
-    text = re.sub(r"\*\*(.*?)\*\*", r"<b>\1</b>", text)
 
-    # Handle *text* (italic)
-    text = re.sub(r"\*(.*?)\*", r"<i>\1</i>", text)
-
-    # Convert newline characters (\n) to <br>
-    text = text.replace("\n", "<br>")
-
-    return text
+#  preprocessing to use Unicode bullet points
+def preprocess_response_unicode(text):
+    """
+    Preprocess the response to handle markdown-like syntax using plain text formatting.
+    Converts bullet points to Unicode bullet points without HTML tags.
+    """
+    # Process the bullet points
+    lines = text.split('\n')
+    result = []
+    
+    for line in lines:
+        # Check if line starts with bullet point
+        if line.strip().startswith('*'):
+            # Replace asterisk with Unicode bullet point and proper spacing
+            cleaned_line = '• ' + line.strip()[1:].strip()
+            result.append(cleaned_line)
+        else:
+            # Handle ***text*** (bold + italic) - could use a different Unicode approach
+            processed_line = line
+            
+            # Remove markdown formatting - since we can't render it in plain text
+            # You can keep these if you want to show the asterisks
+            processed_line = re.sub(r"\*\*\*(.*?)\*\*\*", r"\1", processed_line)
+            processed_line = re.sub(r"\*\*(.*?)\*\*", r"\1", processed_line)
+            processed_line = re.sub(r"\*(.*?)\*", r"\1", processed_line)
+            
+            result.append(processed_line)
+    
+    # Join all lines
+    return '\n'.join(result)
 
 class ChatBotAPI(APIView):
     permission_classes = [AllowAny]  # Change to authentication-based in production
@@ -260,6 +357,10 @@ class ChatBotAPI(APIView):
         api_key = request.data.get("api_key")
         user_message = request.data.get("message")
         session_id = request.data.get("session_id")
+
+        print(user_message, session_id, api_key)
+        print(session_id, "---------------")
+        print(api_key, "---------------")
 
         if not api_key or not user_message or not session_id:
             return Response({"error": "Missing required fields"}, status=400)
@@ -366,11 +467,16 @@ class ChatBotAPI(APIView):
                         """.format(client.company_profile.bot_name,client.company_name,client.company_profile.profile_description, client.company_profile.policies_description, client.company_profile.products_and_services_description,conversation, user_input)
 
         # Generate AI response
+        # print(prompt)
         response = model.generate_content(prompt)
         
         # Process AI response
         if response and hasattr(response, "text"):  # Ensure response has text attribute
-            ai_response = preprocess_response(response.text)
+            # ai_response = preprocess_response(response.text)
+            
+            ai_response = preprocess_response_unicode(response.text)
+
+            print(response.text)
             return ai_response
         else:
             return "Sorry, I couldn't process that."
@@ -391,7 +497,7 @@ def customer_details(request):
 
 from django.shortcuts import get_object_or_404, render
 from django.http import HttpResponse
-# from weasyprint import HTML
+from weasyprint import HTML
 from .models import ChatSession, CustomUser
 from django.template.loader import render_to_string
 
@@ -399,14 +505,14 @@ def generate_full_chat_report(request, user_id):
     user = get_object_or_404(CustomUser, id=user_id)
     sessions = ChatSession.objects.filter(client=user).prefetch_related("messages")
 
-    # # Render the HTML template with chat data
+    # Render the HTML template with chat data
     html_string = render_to_string('chat_report_template.html', {'user': user, 'sessions': sessions})
 
-    # # Generate the PDF from HTML
-    # pdf = HTML(string=html_string).write_pdf()
+    # Generate the PDF from HTML
+    pdf = HTML(string=html_string).write_pdf()
 
-    # # Create a response with PDF content
-    response = HttpResponse(html_string, content_type='application/pdf')
+    # Create a response with PDF content
+    response = HttpResponse(pdf, content_type='application/pdf')
     response['Content-Disposition'] = f'attachment; filename="chat_report_{user.company_name}.pdf"'
 
     return response
@@ -422,12 +528,12 @@ from datetime import timedelta
 from .models import CustomUser, ChatSession, ChatMessage
 import io
 from django.http import FileResponse
-# from reportlab.pdfgen import canvas
-# from reportlab.lib.units import inch
-# from reportlab.lib.pagesizes import letter
-# from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Spacer
-# from reportlab.lib import colors
-# from reportlab.lib.styles import getSampleStyleSheet
+from reportlab.pdfgen import canvas
+from reportlab.lib.units import inch
+from reportlab.lib.pagesizes import letter
+from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Spacer
+from reportlab.lib import colors
+from reportlab.lib.styles import getSampleStyleSheet
 
 def get_user_chat_statistics(user_id=None, time_period=None):
     """
@@ -600,102 +706,102 @@ def generate_pdf_report(user_id=None):
     Returns:
     FileResponse: PDF file response
     """
-    # # Get statistics
-    # stats = get_user_chat_statistics(user_id)
+    # Get statistics
+    stats = get_user_chat_statistics(user_id)
     
-    # # Create buffer for PDF file
-    # buffer = io.BytesIO()
+    # Create buffer for PDF file
+    buffer = io.BytesIO()
     
-    # # Create PDF document
-    # doc = SimpleDocTemplate(buffer, pagesize=letter)
-    # elements = []
+    # Create PDF document
+    doc = SimpleDocTemplate(buffer, pagesize=letter)
+    elements = []
     
-    # # Add styles
-    # styles = getSampleStyleSheet()
-    # title_style = styles['Title']
-    # heading_style = styles['Heading2']
-    # normal_style = styles['Normal']
+    # Add styles
+    styles = getSampleStyleSheet()
+    title_style = styles['Title']
+    heading_style = styles['Heading2']
+    normal_style = styles['Normal']
     
-    # # Add title
-    # if user_id:
-    #     user = CustomUser.objects.get(id=user_id)
-    #     elements.append(Paragraph(f"Chat Analytics Report - {user.company_name}", title_style))
-    # else:
-    #     elements.append(Paragraph("Chat Analytics Report - All Users", title_style))
+    # Add title
+    if user_id:
+        user = CustomUser.objects.get(id=user_id)
+        elements.append(Paragraph(f"Chat Analytics Report - {user.company_name}", title_style))
+    else:
+        elements.append(Paragraph("Chat Analytics Report - All Users", title_style))
     
-    # elements.append(Spacer(1, 0.25*inch))
-    # elements.append(Paragraph(f"Generated on: {timezone.now().strftime('%Y-%m-%d %H:%M')}", normal_style))
-    # elements.append(Spacer(1, 0.5*inch))
+    elements.append(Spacer(1, 0.25*inch))
+    elements.append(Paragraph(f"Generated on: {timezone.now().strftime('%Y-%m-%d %H:%M')}", normal_style))
+    elements.append(Spacer(1, 0.5*inch))
     
-    # # Create table data
-    # if user_id:
-    #     elements.append(Paragraph("User Information", heading_style))
-    #     elements.append(Spacer(1, 0.25*inch))
+    # Create table data
+    if user_id:
+        elements.append(Paragraph("User Information", heading_style))
+        elements.append(Spacer(1, 0.25*inch))
         
-    #     user_info = [
-    #         ["Company Name", stats[0]['company_name']],
-    #         ["Email", stats[0]['email']],
-    #         ["Total Sessions", stats[0]['total_sessions']],
-    #         ["Total Messages", stats[0]['total_messages']],
-    #         ["User Messages", stats[0]['user_messages']],
-    #         ["Bot Messages", stats[0]['bot_messages']],
-    #         ["Avg Messages Per Session", stats[0]['avg_messages_per_session']],
-    #         ["Last Activity", stats[0]['last_activity'].strftime('%Y-%m-%d %H:%M') if stats[0]['last_activity'] else "N/A"]
-    #     ]
+        user_info = [
+            ["Company Name", stats[0]['company_name']],
+            ["Email", stats[0]['email']],
+            ["Total Sessions", stats[0]['total_sessions']],
+            ["Total Messages", stats[0]['total_messages']],
+            ["User Messages", stats[0]['user_messages']],
+            ["Bot Messages", stats[0]['bot_messages']],
+            ["Avg Messages Per Session", stats[0]['avg_messages_per_session']],
+            ["Last Activity", stats[0]['last_activity'].strftime('%Y-%m-%d %H:%M') if stats[0]['last_activity'] else "N/A"]
+        ]
         
-    #     user_table = Table(user_info, colWidths=[2*inch, 4*inch])
-    #     user_table.setStyle(TableStyle([
-    #         ('BACKGROUND', (0, 0), (0, -1), colors.lightgrey),
-    #         ('TEXTCOLOR', (0, 0), (0, -1), colors.black),
-    #         ('ALIGN', (0, 0), (-1, -1), 'LEFT'),
-    #         ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
-    #         ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
-    #         ('BACKGROUND', (0, 1), (-1, -1), colors.white),
-    #         ('GRID', (0, 0), (-1, -1), 1, colors.black)
-    #     ]))
+        user_table = Table(user_info, colWidths=[2*inch, 4*inch])
+        user_table.setStyle(TableStyle([
+            ('BACKGROUND', (0, 0), (0, -1), colors.lightgrey),
+            ('TEXTCOLOR', (0, 0), (0, -1), colors.black),
+            ('ALIGN', (0, 0), (-1, -1), 'LEFT'),
+            ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+            ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
+            ('BACKGROUND', (0, 1), (-1, -1), colors.white),
+            ('GRID', (0, 0), (-1, -1), 1, colors.black)
+        ]))
         
-    #     elements.append(user_table)
-    # else:
-    #     elements.append(Paragraph("All Users Statistics", heading_style))
-    #     elements.append(Spacer(1, 0.25*inch))
+        elements.append(user_table)
+    else:
+        elements.append(Paragraph("All Users Statistics", heading_style))
+        elements.append(Spacer(1, 0.25*inch))
         
-    #     # Create table header
-    #     table_data = [
-    #         ["Company", "Total Sessions", "Total Messages", "User Msgs", "Bot Msgs", "Avg Msgs/Session", "Last Activity"]
-    #     ]
+        # Create table header
+        table_data = [
+            ["Company", "Total Sessions", "Total Messages", "User Msgs", "Bot Msgs", "Avg Msgs/Session", "Last Activity"]
+        ]
         
-    #     # Add data rows
-    #     for user_stat in stats:
-    #         table_data.append([
-    #             user_stat['company_name'],
-    #             str(user_stat['total_sessions']),
-    #             str(user_stat['total_messages']),
-    #             str(user_stat['user_messages']),
-    #             str(user_stat['bot_messages']),
-    #             str(user_stat['avg_messages_per_session']),
-    #             user_stat['last_activity'].strftime('%Y-%m-%d') if user_stat['last_activity'] else "N/A"
-    #         ])
+        # Add data rows
+        for user_stat in stats:
+            table_data.append([
+                user_stat['company_name'],
+                str(user_stat['total_sessions']),
+                str(user_stat['total_messages']),
+                str(user_stat['user_messages']),
+                str(user_stat['bot_messages']),
+                str(user_stat['avg_messages_per_session']),
+                user_stat['last_activity'].strftime('%Y-%m-%d') if user_stat['last_activity'] else "N/A"
+            ])
         
-    #     # Create table and style
-    #     users_table = Table(table_data)
-    #     users_table.setStyle(TableStyle([
-    #         ('BACKGROUND', (0, 0), (-1, 0), colors.lightgrey),
-    #         ('TEXTCOLOR', (0, 0), (-1, 0), colors.black),
-    #         ('ALIGN', (0, 0), (-1, -1), 'LEFT'),
-    #         ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
-    #         ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
-    #         ('BACKGROUND', (0, 1), (-1, -1), colors.white),
-    #         ('GRID', (0, 0), (-1, -1), 1, colors.black)
-    #     ]))
+        # Create table and style
+        users_table = Table(table_data)
+        users_table.setStyle(TableStyle([
+            ('BACKGROUND', (0, 0), (-1, 0), colors.lightgrey),
+            ('TEXTCOLOR', (0, 0), (-1, 0), colors.black),
+            ('ALIGN', (0, 0), (-1, -1), 'LEFT'),
+            ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+            ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
+            ('BACKGROUND', (0, 1), (-1, -1), colors.white),
+            ('GRID', (0, 0), (-1, -1), 1, colors.black)
+        ]))
         
-    #     elements.append(users_table)
+        elements.append(users_table)
     
-    # # Build PDF and save to buffer
-    # doc.build(elements)
-    # buffer.seek(0)
+    # Build PDF and save to buffer
+    doc.build(elements)
+    buffer.seek(0)
     
-    # # Create file response
-    # return FileResponse(buffer, as_attachment=True, filename='chat_analytics_report.pdf')
+    # Create file response
+    return FileResponse(buffer, as_attachment=True, filename='chat_analytics_report.pdf')
 
 
 # views.py - Add these functions to your existing views.py
